@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 
 class AuthController extends Controller
@@ -19,7 +19,6 @@ class AuthController extends Controller
     public function loginSubmit(Request $request)
     {
         // form validation
-
         $request->validate(
             // rules
             [
@@ -33,30 +32,34 @@ class AuthController extends Controller
                 'text_password.required' => 'A senha é obrigatória',
                 'text_password.min' => 'A senha deve ter pelo menos :min caracteres',
                 'text_password.max' => 'A senha deve ter no máximo :max caracteres',
-
             ]
         );
-       // get all users from the database
 
-      // $users = User::all()->toArray();
+        // try to authenticate the user
+        $user = User::where('email', $request->text_username)->first();
 
-       //echo '<pre>';
-      // print_r($users);
-       
-        // as an object instance of the models class
+        if (!$user) {
+            return back()->withErrors(['text_username' => 'Este e-mail não está registrado'])->withInput();
+        }
 
-        $userModel = new User();
-        $users = $userModel->all()->toArray();
+        if (!Hash::check($request->text_password, $user->password)) {
+            return back()->withErrors(['text_password' => 'A senha está incorreta'])->withInput();
+        }
 
-        echo '<pre>';
-       print_r($users);
-       
+        // login the user
+        Auth::login($user);
+        $request->session()->regenerate();
 
+        return redirect('/dashboard');
     }
     
     public function logout()
     {
-        echo 'logout';
+        Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+        
+        return redirect('/');
     }
     
     

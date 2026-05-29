@@ -9,3 +9,10 @@ Route::get('/', function () {
 });
 
 Route::post('/loginSubmit', [AuthController::class, 'loginSubmit']);
+Route::post('/logout', [AuthController::class, 'logout']);
+
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    });
+});
