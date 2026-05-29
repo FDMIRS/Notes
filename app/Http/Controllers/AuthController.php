@@ -29,7 +29,7 @@ class AuthController extends Controller
             // error messages
             [
                 'text_username.required' => 'O nome é obrigatório',
-                'text_username.email' => 'O nome deve ser um e-mail',
+                'text_username.email' => 'O nome deve ser um e-mail válido',
                 'text_password.required' => 'A senha é obrigatória',
                 'text_password.min' => 'A senha deve ter pelo menos :min caracteres',
                 'text_password.max' => 'A senha deve ter no máximo :max caracteres',
