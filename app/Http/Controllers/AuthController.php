@@ -35,31 +35,37 @@ class AuthController extends Controller
             ]
         );
 
+        // get all the users from the database
+        $users = User::all()->toArray();
+
+        echo '<pre>';
+        print_r($users);
+
         // try to authenticate the user
-        $user = User::where('email', $request->text_username)->first();
+        // $user = User::where('email', $request->text_username)->first();
 
-        if (!$user) {
-            return back()->withErrors(['text_username' => 'Este e-mail não está registrado'])->withInput();
-        }
+        // if (!$user) {
+        //     return back()->withErrors(['text_username' => 'Este e-mail não está registrado'])->withInput();
+        // }
 
-        if (!Hash::check($request->text_password, $user->password)) {
-            return back()->withErrors(['text_password' => 'A senha está incorreta'])->withInput();
-        }
+        // if (!Hash::check($request->text_password, $user->password)) {
+        //     return back()->withErrors(['text_password' => 'A senha está incorreta'])->withInput();
+        // }
 
         // login the user
-        Auth::login($user);
-        $request->session()->regenerate();
+    //     Auth::login($user);
+    //     $request->session()->regenerate();
 
-        return redirect('/dashboard');
-    }
+    //     return redirect('/dashboard');
+     }
     
     public function logout()
     {
-        Auth::logout();
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
+        // Auth::logout();
+        // request()->session()->invalidate();
+        // request()->session()->regenerateToken();
         
-        return redirect('/');
+        // return redirect('/');
     }
     
     
