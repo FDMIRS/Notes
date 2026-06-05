@@ -35,19 +35,39 @@ class AuthController extends Controller
             ]
         );
 
-        // get all the users from the database
-        $users = User::all()->toArray();
+        // check if users exists
+        
+        $username = $request->text_username;
+        $password = $request->text_password;
 
-        echo '<pre>';
-        print_r($users);
+        $user = User::where('username', $username)->where('deleted_at', NULL)->first();
 
-        // try to authenticate the user
-        // $user = User::where('email', $request->text_username)->first();
+        if(!$user) {
+            return redirect()->back()->WithInput()->with(['loginError' => 'Este e-mail não está registrado']);
+        }
 
-        // if (!$user) {
-        //     return back()->withErrors(['text_username' => 'Este e-mail não está registrado'])->withInput();
-        // }
+        // check if password is correct
 
+        if(!password_verify($password, $user->password))
+        {
+            return redirect()->back()->WithInput()->with(['loginError' => 'A senha está incorreta']);
+        } 
+       
+       // update last_login
+        $user->last_login = date('Y-m-d H:i:s');
+        $user->save();
+       
+        echo 'Login efetuado com sucesso!';
+        
+        // login user
+        session([
+            'user' => [
+                'id' => $user->id,
+                'username' => $user->username
+            ]
+            ]);
+
+            echo 'LOGIN COM SUCESSO!';
         // if (!Hash::check($request->text_password, $user->password)) {
         //     return back()->withErrors(['text_password' => 'A senha está incorreta'])->withInput();
         // }

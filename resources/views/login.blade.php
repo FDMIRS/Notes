@@ -8,7 +8,7 @@
                 
                 <!-- logo -->
                 <div class="text-center p-3">
-                    <img src="assets/images/logo.png" alt="Notes logo">
+                    <img src="{{ asset('assets/images/logo.png') }}" alt="Notes logo">
                 </div>
 
                 <!-- form -->
@@ -36,6 +36,13 @@
                                 <button type="submit" class="btn btn-secondary w-100">LOGIN</button>
                             </div>
                         </form>
+
+                        {{-- Invalid login --}}
+                        @if(session('loginError'))
+                            <div class="alert alert-danger mt-3">
+                                {{ session('loginError') }}
+                            </div>
+                        @endif
                     </div>
                 </div>
 
