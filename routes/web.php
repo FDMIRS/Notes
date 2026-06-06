@@ -1,20 +1,21 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\CheckIsLogged;
+use App\Http\Middleware\CheckIsNotLogged;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MainController;
 
+ // auth routes - user not logged
+Route::middleware(CheckIsNotLogged::class)->group(function () {
+    Route::get('/login', [AuthController::class, 'login']);
+    Route::post('/loginSubmit', [AuthController::class, 'loginSubmit']);
+});
 
-// Route::get('/', function () {
-//     return view('login');
-// });
+// app routes - user logged
+Route::middleware(CheckIsLogged::class)->group(function () {
+    Route::get('/', [MainController::class, 'index']);
+    Route::get('/newNote', [MainController::class, 'newNote']);
+    Route::get('/logout', [AuthController::class, 'logout']);
+});
 
-Route::get('/login', [AuthController::class, 'login']);
-
-Route::post('/loginSubmit', [AuthController::class, 'loginSubmit']);
-Route::post('/logout', [AuthController::class, 'logout']);
-
-// Route::middleware('auth')->group(function () {
-//     Route::get('/dashboard', function () {
-//         return view('dashboard');
-//     });
-// });
